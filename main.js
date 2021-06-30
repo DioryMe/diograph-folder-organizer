@@ -16,25 +16,38 @@ const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderP
   }
 }
 
-const resetTempFolder = () => {
+const copyFiles = async ({ filePaths }) => {
+  const destinationPath = path.join(__dirname, 'tmp', 'ImageObject')
+  if (!existsSync(destinationPath)) {
+    fsPromises.mkdir(destinationPath)
+  }
+  return Promise.all(
+    filePaths.map((filePath) => {
+      console.log(filePath)
+      console.log('->', path.join(destinationPath, path.basename(filePath)))
+      return fsPromises.copyFile(filePath, path.join(destinationPath, path.basename(filePath)))
+    })
+  )
+}
+
+const resetTempFolder = async () => {
   const tempFolderPath = path.join(__dirname, 'tmp')
-  // fsPromises.rm(tempFolderPath, { recursive: true, force: true })
-  // fsPromises.mkdir(tempFolderPath)
-  console.log(tempFolderPath)
+  if (existsSync(tempFolderPath)) {
+    await fsPromises.rm(tempFolderPath, { recursive: true, force: true })
+  }
+  await fsPromises.mkdir(tempFolderPath)
+  console.log('TempFolderPath:', tempFolderPath)
 }
 
 const main = async function main() {
   try {
+    await resetTempFolder()
     const paths = await getFileAndSubfolderPaths(folderPath)
     console.log(paths)
-    resetTempFolder()
-
+    await copyFiles(paths)
   } catch(e) {
     console.log('ERROR:', e.message)
   }
 }
 
 main()
-
-
-
