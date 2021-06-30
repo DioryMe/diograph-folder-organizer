@@ -1,4 +1,5 @@
 const { existsSync, lstatSync, promises, statSync } = require('fs')
+const { isValid, isFile, isFolder, getPath } = require('./dirent-reader')
 
 const folderPath = process.argv[2]
 
