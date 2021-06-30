@@ -1,5 +1,7 @@
 const { existsSync, lstatSync, promises, statSync } = require('fs')
 const { isValid, isFile, isFolder, getPath } = require('./dirent-reader')
+const fsPromises = require('fs/promises');
+const path = require('path')
 
 const folderPath = process.argv[2]
 
@@ -14,14 +16,25 @@ const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderP
   }
 }
 
+const resetTempFolder = () => {
+  const tempFolderPath = path.join(__dirname, 'tmp')
+  // fsPromises.rm(tempFolderPath, { recursive: true, force: true })
+  // fsPromises.mkdir(tempFolderPath)
+  console.log(tempFolderPath)
+}
+
 const main = async function main() {
   try {
     const paths = await getFileAndSubfolderPaths(folderPath)
     console.log(paths)
+    resetTempFolder()
+
   } catch(e) {
     console.log('ERROR:', e.message)
   }
 }
 
 main()
+
+
 
