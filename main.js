@@ -19,7 +19,7 @@ const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderP
   }
 }
 
-const getDestinationPath = async function(filePath) {
+const getDestinationPaths = async function(filePath) {
   if (diograph) {
     const rootDioryLinks = Object.keys(diograph[rootId].links)
     const fileName = path.basename(filePath)
@@ -33,32 +33,36 @@ const getDestinationPath = async function(filePath) {
         const destinationPaths = linkedDiories.map((linkedDiory) => {
           if (linkedDiory.data) {
             const type = linkedDiory.data[0]['@type']
-            console.log(type)
-            console.log(linkedDiory.text)
+            console.log('type', type)
+            console.log('diory.text', linkedDiory.text)
             return path.join(__dirname, 'tmp', type, linkedDiory.text)
           }
         })
-        console.log(destinationPaths)
-        return destinationPaths[0]
+        return destinationPaths.filter(Boolean)
       }
     }
   }
   return getDioryType(filePath).then((dioryType) => {
     const destinationPath = path.join(__dirname, 'tmp', dioryType)
-    console.log(destinationPath)
-    return destinationPath
+    console.log('diorytype destination', destinationPath)
+    return [destinationPath]
   })
 }
 
 const copyFiles = async ({ filePaths }) => {
   return Promise.all(
     filePaths.map((filePath) => {
-      return getDestinationPath(filePath).then((destinationPath) => {
+      return getDestinationPaths(filePath).then((destinationPaths) => {
+        if (destinationPaths.length < 1) {
+          return
+        }
+        const destinationPath = destinationPaths[0]
+        console.log('path', destinationPath)
         if (!existsSync(destinationPath)) {
           fsPromises.mkdir(destinationPath)
         }
         console.log(filePath)
-        console.log('->', path.join(destinationPath, path.basename(filePath)))
+        console.log('=============>', path.join(destinationPath, path.basename(filePath)))
         return fsPromises.copyFile(filePath, path.join(destinationPath, path.basename(filePath)))
       })
     })
