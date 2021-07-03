@@ -6,7 +6,7 @@ const { getDioryType } = require('./file-reader')
 const { readDiographJson } = require('./diograph-reader')
 
 const folderPath = process.argv[2]
-const { rootId, diograph } = readDiographJson(folderPath)
+const { rootId, diograph } = readDiographJson(folderPath) ? readDiographJson(folderPath) : {}
 
 const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderPath) {
   if (!(existsSync(folderPath) && lstatSync(folderPath).isDirectory())) {
