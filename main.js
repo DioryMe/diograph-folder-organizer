@@ -2,6 +2,7 @@ const { existsSync, lstatSync, promises, statSync } = require('fs')
 const { isValid, isFile, isFolder, getPath } = require('./dirent-reader')
 const fsPromises = require('fs/promises');
 const path = require('path')
+const { getDioryType } = require('./file-reader')
 
 const folderPath = process.argv[2]
 
@@ -17,15 +18,18 @@ const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderP
 }
 
 const copyFiles = async ({ filePaths }) => {
-  const destinationPath = path.join(__dirname, 'tmp', 'ImageObject')
-  if (!existsSync(destinationPath)) {
-    fsPromises.mkdir(destinationPath)
-  }
   return Promise.all(
     filePaths.map((filePath) => {
-      console.log(filePath)
-      console.log('->', path.join(destinationPath, path.basename(filePath)))
-      return fsPromises.copyFile(filePath, path.join(destinationPath, path.basename(filePath)))
+      return getDioryType(filePath).then((dioryType) => {
+        const destinationPath = path.join(__dirname, 'tmp', dioryType)
+        console.log(destinationPath)
+        if (!existsSync(destinationPath)) {
+          fsPromises.mkdir(destinationPath)
+        }
+        console.log(filePath)
+        console.log('->', path.join(destinationPath, path.basename(filePath)))
+        return fsPromises.copyFile(filePath, path.join(destinationPath, path.basename(filePath)))
+      })
     })
   )
 }
