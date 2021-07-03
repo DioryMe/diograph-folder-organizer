@@ -24,11 +24,23 @@ const getDestinationPath = async function(filePath) {
     const rootDioryLinks = Object.keys(diograph[rootId].links)
     const fileName = path.basename(filePath)
     if (rootDioryLinks.includes(fileName)) {
-      console.log('filename', fileName)
       const dioryId = diograph[rootId].links[fileName].id
-      console.log('ID', dioryId)
       const diory = diograph[dioryId]
-      console.log('diory', diory)
+      if (diory.links) {
+        const linkedDiories = Object.values(diory.links).map(({ id }) => {
+          return diograph[id]
+        })
+        const destinationPaths = linkedDiories.map((linkedDiory) => {
+          if (linkedDiory.data) {
+            const type = linkedDiory.data[0]['@type']
+            console.log(type)
+            console.log(linkedDiory.text)
+            return path.join(__dirname, 'tmp', type, linkedDiory.text)
+          }
+        })
+        console.log(destinationPaths)
+        return destinationPaths[0]
+      }
     }
   }
   return getDioryType(filePath).then((dioryType) => {
@@ -63,14 +75,14 @@ const resetTempFolder = async () => {
 }
 
 const main = async function main() {
-  try {
+  // try {
     await resetTempFolder()
     const paths = await getFileAndSubfolderPaths(folderPath)
     console.log(paths)
     await copyFiles(paths)
-  } catch(e) {
-    console.log('ERROR:', e.message)
-  }
+  // } catch(e) {
+  //   console.log('ERROR:', e.message)
+  // }
 }
 
 main()
