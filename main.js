@@ -3,8 +3,10 @@ const { isValid, isFile, isFolder, getPath } = require('./dirent-reader')
 const fsPromises = require('fs/promises');
 const path = require('path')
 const { getDioryType } = require('./file-reader')
+const { readDiographJson } = require('./diograph-reader')
 
 const folderPath = process.argv[2]
+const diograph = readDiographJson(folderPath)
 
 const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderPath) {
   if (!(existsSync(folderPath) && lstatSync(folderPath).isDirectory())) {
@@ -18,6 +20,9 @@ const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderP
 }
 
 const getDestinationPath = async function(filePath) {
+  if (diograph) {
+    console.log('JEEEE', Object.values(diograph)[0])
+  }
   return getDioryType(filePath).then((dioryType) => {
     const destinationPath = path.join(__dirname, 'tmp', dioryType)
     console.log(destinationPath)
