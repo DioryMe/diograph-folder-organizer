@@ -17,12 +17,18 @@ const getFileAndSubfolderPaths = async function getFileAndSubfolderPaths(folderP
   }
 }
 
+const getDestinationPath = async function(filePath) {
+  return getDioryType(filePath).then((dioryType) => {
+    const destinationPath = path.join(__dirname, 'tmp', dioryType)
+    console.log(destinationPath)
+    return destinationPath
+  })
+}
+
 const copyFiles = async ({ filePaths }) => {
   return Promise.all(
     filePaths.map((filePath) => {
-      return getDioryType(filePath).then((dioryType) => {
-        const destinationPath = path.join(__dirname, 'tmp', dioryType)
-        console.log(destinationPath)
+      return getDestinationPath(filePath).then((destinationPath) => {
         if (!existsSync(destinationPath)) {
           fsPromises.mkdir(destinationPath)
         }
