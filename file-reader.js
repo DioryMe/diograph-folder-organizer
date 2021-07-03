@@ -3,7 +3,7 @@ const FileType = require('file-type')
 exports.getDioryType = async function getDioryType(filePath) {
   const fileType = await FileType.fromFile(filePath)
   if (!fileType || !fileType.mime) {
-    return 'DigitalDocument'
+    return 'Other'
   }
 
   const type = fileType.mime.split('/')[0]
