@@ -1,0 +1,14 @@
+{
+  "name": "diograph-folder-organizer",
+  "version": "0.0.1",
+  "description": "Copies files from given source folder to diograph-folder (=tmp/)",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "file-type": "^16.4.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
