@@ -34,8 +34,7 @@ const getDestinationPaths = async function(filePath) {
         const destinationPaths = linkedDiories.map((linkedDiory) => {
           if (linkedDiory.data) {
             const type = linkedDiory.data[0]['@type']
-            console.log('type', type)
-            console.log('diory.text', linkedDiory.text)
+            console.log('Diograph.json data used: (@type & diory.text)', type, linkedDiory.text)
             return path.join(__dirname, 'tmp', type, linkedDiory.text)
           }
         })
@@ -45,7 +44,7 @@ const getDestinationPaths = async function(filePath) {
   }
   return getDioryType(filePath).then((dioryType) => {
     const destinationPath = path.join(__dirname, 'tmp', dioryType)
-    console.log('diorytype destination', destinationPath)
+    console.log('MIME-type used:', destinationPath)
     return [destinationPath]
   })
 }
@@ -58,12 +57,10 @@ const copyFiles = async ({ filePaths }) => {
           return
         }
         const destinationPath = destinationPaths[0]
-        console.log('path', destinationPath)
         if (!existsSync(destinationPath)) {
           fs.mkdirSync(destinationPath, { recursive: true })
         }
-        console.log(filePath)
-        console.log('=============>', path.join(destinationPath, path.basename(filePath)))
+        console.log('-', path.join(destinationPath, path.basename(filePath)))
         return fsPromises.copyFile(filePath, path.join(destinationPath, path.basename(filePath)))
       })
     })
@@ -76,18 +73,12 @@ const resetTempFolder = async () => {
     await fsPromises.rm(tempFolderPath, { recursive: true, force: true })
   }
   await fsPromises.mkdir(tempFolderPath)
-  console.log('TempFolderPath:', tempFolderPath)
 }
 
 const main = async function main() {
-  // try {
-    await resetTempFolder()
-    const paths = await getFileAndSubfolderPaths(folderPath)
-    console.log(paths)
-    await copyFiles(paths)
-  // } catch(e) {
-  //   console.log('ERROR:', e.message)
-  // }
+  await resetTempFolder()
+  const paths = await getFileAndSubfolderPaths(folderPath)
+  await copyFiles(paths)
 }
 
 main()
