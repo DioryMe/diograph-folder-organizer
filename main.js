@@ -1,6 +1,7 @@
 const { existsSync, lstatSync, promises, statSync } = require('fs')
 const { isValid, isFile, isFolder, getPath } = require('./dirent-reader')
 const fsPromises = require('fs/promises');
+const fs = require('fs');
 const path = require('path')
 const { getDioryType } = require('./file-reader')
 const { readDiographJson } = require('./diograph-reader')
@@ -59,7 +60,7 @@ const copyFiles = async ({ filePaths }) => {
         const destinationPath = destinationPaths[0]
         console.log('path', destinationPath)
         if (!existsSync(destinationPath)) {
-          fsPromises.mkdir(destinationPath)
+          fs.mkdirSync(destinationPath, { recursive: true })
         }
         console.log(filePath)
         console.log('=============>', path.join(destinationPath, path.basename(filePath)))
