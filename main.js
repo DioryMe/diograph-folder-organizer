@@ -79,6 +79,7 @@ const main = async function main() {
   await resetTempFolder()
   const paths = await getFileAndSubfolderPaths(folderPath)
   await copyFiles(paths)
+  await fsPromises.copyFile(path.join(__dirname, folderPath, 'diograph.json'), path.join(__dirname, 'tmp', 'diograph.json'))
 }
 
 main()
