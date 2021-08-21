@@ -104,6 +104,7 @@ exports.reducers = {
   initialState,
   createDiory,
   updateDiory,
+  deleteDiory,
   createLink,
   deleteLink
 }

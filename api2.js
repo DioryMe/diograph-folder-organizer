@@ -30,7 +30,7 @@ function updateDiory(payload) {
   return reducers.updateDiory({ diograph }, { payload: { diory: payload } }).diograph
 }
 
-function deleteDiory(id, removeLinks = true) {
+function deleteDiory(payload) {
   return reducers.deleteDiory({ diograph }, { payload: { diory: payload } }).diograph
 }
 
@@ -39,15 +39,15 @@ function createLink(fromDioryId, toDioryId) {
     { diograph },
     {
       payload: {
-        fromDiory: { id: fromDioryId },
-        toDiory: { id: toDioryId }
+        diory: { id: fromDioryId },
+        link: { id: toDioryId }
       }
     }
   ).diograph
 }
 
 function deleteLink(fromDioryId, toDioryId) {
-  reducers.deleteLink(
+  return reducers.deleteLink(
     { diograph },
     {
       payload: {
@@ -61,8 +61,27 @@ function deleteLink(fromDioryId, toDioryId) {
 
 // const response = getDioryWithLinkedDiories("93b2f5e6-f135-4595-b0c2-3def18cc91bb")
 // const response = getDioryWithLinkedAndReverseLinkedDiories("93b2f5e6-f135-4595-b0c2-3def18cc91bb")
-const response = createDiory({
-  id: "456-0213-4a91-855f-97ef03c2d261"
+// const response = createDiory({
+//   id: "456-0213-4a91-855f-97ef03c2d261"
+// })
+// const response = deleteDiory({
+//   id: "456-0213-4a91-855f-97ef03c2d261"
+// })
+// const response = createLink(
+//   "456-0213-4a91-855f-97ef03c2d261",
+//   "24d0239d-0213-4a91-855f-97ef03c2d261"
+// )
+// const response = deleteLink(
+//   "456-0213-4a91-855f-97ef03c2d261",
+//   "24d0239d-0213-4a91-855f-97ef03c2d261"
+// )
+// const response = deleteLink(
+//   "24d0239d-0213-4a91-855f-97ef03c2d261",
+//   "456-0213-4a91-855f-97ef03c2d261"
+// )
+const response = updateDiory({
+  "id": "93b2f5e6-f135-4595-b0c2-3def18cc91bb",
+  "text": "not-so-random-folder"
 })
 saveDiograph(response)
 console.log(JSON.stringify(response, null, 4))
