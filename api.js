@@ -3,6 +3,15 @@ const folderPath = process.argv[2]
 const { readDiographJson } = require('./diograph-reader')
 const { rootId, diograph } = readDiographJson(folderPath) ? readDiographJson(folderPath) : {}
 
+function saveDiograph(updatedDiograph) {
+  const fs = require('fs')
+  const fileContent = {
+    rootId: rootId,
+    diograph: updatedDiograph
+  }
+  return fs.writeFileSync(`${folderPath}/diograph.json`, JSON.stringify(fileContent, null, 2))
+}
+
 function getDiory(id) {
   return diograph[id]
 }
@@ -22,7 +31,13 @@ function getDioryWithLinkedAndReverseLinkedDiories(id) {
 }
 
 function createDiory(payload) {
-  // Throws error if diory already exists!
+  if (diograph[payload.id]) {
+    // Throws error if diory already exists!
+    throw new Error(`Can't create, diory (id: ${payload.id}) already exists!`)
+  }
+  diograph[payload.id] = payload
+  saveDiograph(diograph)
+  return getDiory(payload.id)
 }
 
 function updateDiory(payload) {
@@ -43,6 +58,9 @@ function deleteLink(fromDioryId, toDioryId) {
 
 
 // const response = getDioryWithLinkedDiories("93b2f5e6-f135-4595-b0c2-3def18cc91bb")
-const response = getDioryWithLinkedAndReverseLinkedDiories("93b2f5e6-f135-4595-b0c2-3def18cc91bb")
+// const response = getDioryWithLinkedAndReverseLinkedDiories("93b2f5e6-f135-4595-b0c2-3def18cc91bb")
+const response = createDiory({
+  id: "24d0239d-0213-4a91-855f-97ef03c2d261"
+})
 console.log(JSON.stringify(response, null, 4))
 
